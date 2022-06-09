@@ -1,8 +1,16 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { EventEntity } from './events/entities/event.entity';
+import { LoggerMiddleware } from './users/middleware/logger.middleware';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './users/user.module';
+import { BookmarkModule } from './bookmark/bookmark.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -10,18 +18,18 @@ import { EventEntity } from './events/entities/event.entity';
       driver: ApolloDriver,
       autoSchemaFile: 'schema.gql',
     }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'phpmyadmin',
-      password: 'phpmyadmin',
-      database: 'todo_local',
-      entities: [EventEntity],
-      synchronize: true,
-    }),
+    AuthModule,
+    UserModule,
+    BookmarkModule,
+    PrismaModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes({ path: 'users', method: RequestMethod.ALL });
+  }
+}
