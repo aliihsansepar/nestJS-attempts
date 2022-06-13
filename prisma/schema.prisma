@@ -15,8 +15,9 @@ model users {
   name        String
   email       String @unique
   password    String
-  createdAt   DateTime @default(now()) 
-  updatedAt   DateTime @updatedAt
+  created_at   DateTime @default(now()) 
+  updated_at   DateTime @updatedAt
+  deleted_at  DateTime?
 }
 
 model bookmarks {
@@ -26,4 +27,5 @@ model bookmarks {
   description String @default("")
   createdAt   DateTime @default(now()) 
   updatedAt   DateTime @updatedAt
+  deleted_at  DateTime?
 }
