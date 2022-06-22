@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserInput } from './dto/input/create-user.input';
 import { User } from './models/user';
 import { UpdateUserInput } from './dto/input/update-user.input';
-import { GetUserArgs } from './dto/args/get-user.args';
+import { GetUserByIdArgs } from './dto/args/get-user-by-id.args';
 import { DeleteUserInput } from './dto/input/delete-user.input';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { User as UserModel } from '@prisma/client';
+import * as argon from 'argon2';
 
 @Injectable()
 export class UserService {
@@ -13,27 +14,44 @@ export class UserService {
   async getUsers(): Promise<UserModel[]> {
     return this.prisma.user.findMany({});
   }
-  /*   public createUser(createUserData: CreateUserInput): User {
-    const user: User = {
-      id: uuidv4(),
-      ...createUserData,
-    };
+  async createUser(createUserData: CreateUserInput): Promise<UserModel> {
+    const password = await argon.hash(createUserData.password);
+    const user = await this.prisma.user.create({
+      data: {
+        name: createUserData.name,
+        email: createUserData.email,
+        password,
+      },
+    });
     return user;
   }
-  public getUserByID(getUserArgs: GetUserArgs): User {
-    return this.users.find((user) => user.id == getUserArgs.id);
+
+  async getUserByID(getUserArgs: GetUserByIdArgs): Promise<UserModel> {
+    return this.prisma.user.findUnique({
+      where: {
+        id: getUserArgs.id,
+      },
+    });
   }
-  public updateUser(updateUserData: UpdateUserInput): User {
-    const user = this.users.find((user) => user.id == updateUserData.id);
-    Object.assign(user, updateUserData);
+  async updateUser(updateUserData: UpdateUserInput): Promise<UserModel> {
+    const password = await argon.hash(updateUserData.password);
+    const user = await this.prisma.user.update({
+      where: {
+        id: updateUserData.id,
+      },
+      data: {
+        name: updateUserData.name,
+        password,
+      },
+    });
     return user;
   }
-  public deleteUser(deleteUserData: DeleteUserInput): User {
-    const userIndex = this.users.findIndex(
-      (user) => user.id === deleteUserData.id,
-    );
-    const user = this.users[userIndex];
-    this.users.splice(userIndex, 1);
+  public deleteUser(deleteUserData: DeleteUserInput): Promise<UserModel> {
+    const user = this.prisma.user.delete({
+      where: {
+        id: deleteUserData.id,
+      },
+    });
     return user;
-  } */
+  }
 }
