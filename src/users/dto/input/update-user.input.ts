@@ -5,7 +5,7 @@ import { IsEmail, IsNotEmpty, IsOptional } from 'class-validator';
 export class UpdateUserInput {
   @Field()
   @IsNotEmpty()
-  userID: string;
+  id: string;
 
   @Field()
   @IsNotEmpty()

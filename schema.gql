@@ -3,41 +3,13 @@
 # ------------------------------------------------------
 
 type User {
-  userID: String!
+  id: String!
   name: String!
   surname: String!
   email: String!
   age: Int!
-  subricription: Boolean
 }
 
 type Query {
   users: [User]!
-  user(userID: String!): User
-}
-
-type Mutation {
-  createUser(createUserData: CreateUserInput!): User!
-  updateUser(updateUserInput: UpdateUserInput!): User!
-  deleteUser(deleteUserInput: DeleteUserInput!): User!
-}
-
-input CreateUserInput {
-  name: String!
-  surname: String!
-  email: String!
-  age: Int!
-}
-
-input UpdateUserInput {
-  userID: String!
-  name: String!
-  surname: String!
-  email: String!
-  age: Int!
-  subricription: Boolean
-}
-
-input DeleteUserInput {
-  userID: String!
 }

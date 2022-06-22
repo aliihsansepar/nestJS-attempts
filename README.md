@@ -1,5 +1,6 @@
 # nestJS-attempts
-## Prerequisities,
+
+## Prerequisities
 
 [MongoDB Cluster](https://www.mongodb.com/) 
 
