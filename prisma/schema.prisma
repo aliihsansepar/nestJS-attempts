@@ -6,31 +6,45 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id          Int @id @default(autoincrement())
+  id          String  @id @default(auto())  @map("_id") @db.ObjectId
   name        String
   email       String @unique
   password    String
-  created_at   DateTime @default(now()) 
-  updated_at   DateTime @updatedAt
+  created_at  DateTime @default(now()) 
+  updated_at  DateTime @updatedAt
   deleted_at  DateTime?
-  bookmarks  Bookmark[]
+  addresses   Address[]
+  orders   Order[]
   @@map("users")
 }
 
-model Bookmark {
-  id          Int @id @default(autoincrement())
+model Address {
+  id          String  @id @default(auto())  @map("_id") @db.ObjectId
   title       String
-  url         String
+  address     String
   description String @default("")
   createdAt   DateTime @default(now()) 
   updatedAt   DateTime @updatedAt
   deleted_at  DateTime?
-  user_id   Int @default(autoincrement())
+  user        User @relation(fields: [user_id], references: [id])
+  user_id     String @db.ObjectId
+  @@map("addresses")
+}
+
+model Order {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  product   String  
+  quantity  Int
+  price     Int
+  user_id   String @db.ObjectId
   user      User @relation(fields: [user_id], references: [id])
-  @@map("bookmarks")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deleted_at  DateTime?
+  @@map("orders")
 }

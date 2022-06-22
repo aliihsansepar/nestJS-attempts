@@ -58,7 +58,7 @@ export class AuthService {
   }
 
   async signToken(
-    user_id: number,
+    user_id: string,
     email: string,
   ): Promise<{ access_token: string; expired_at: Date }> {
     const payload = {
