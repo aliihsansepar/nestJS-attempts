@@ -2,23 +2,33 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Address {
+  id: String!
+  title: String!
+  addres: String!
+  description: String!
+  user_id: String!
+}
+
 type User {
   id: String!
   name: String!
-  surname: String!
   email: String!
-  age: Int!
+  password: String!
+  addresses: [Address!]!
 }
 
 type Query {
   getAllUsers: [User]!
   getUserById(id: String!): User
+  getAllAddresses: [Address]!
 }
 
 type Mutation {
   createUser(createUserData: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   deleteUser(deleteUserInput: DeleteUserInput!): User!
+  createAddress(createAddresInput: CreateAddressInput!): Address!
 }
 
 input CreateUserInput {
@@ -36,4 +46,11 @@ input UpdateUserInput {
 
 input DeleteUserInput {
   id: String!
+}
+
+input CreateAddressInput {
+  title: String!
+  address: String!
+  description: String!
+  user_id: String!
 }
